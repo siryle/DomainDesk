@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:DomainDesk"
         xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
-        Title="域控台 · Domain Desk 1.6.1" Icon="Assets/DomainDesk.ico" Style="{StaticResource {x:Type Window}}" shell:WindowChrome.WindowChrome="{StaticResource WindowChrome}" WindowStyle="None" Width="1390" Height="880" MinWidth="1120" MinHeight="740" WindowStartupLocation="CenterScreen"
+        Title="域控台 · Domain Desk 1.6.2" Icon="Assets/DomainDesk.ico" Style="{StaticResource {x:Type Window}}" shell:WindowChrome.WindowChrome="{StaticResource WindowChrome}" WindowStyle="None" Width="1390" Height="880" MinWidth="1120" MinHeight="740" WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded" Closing="Window_Closing" SizeChanged="Window_SizeChanged">
     <Border x:Name="WindowFrame" BorderBrush="#8BA7A2" BorderThickness="1" Background="{StaticResource Canvas}" SnapsToDevicePixels="True">
     <Grid x:Name="WorkspaceRoot" Background="{StaticResource Canvas}" SizeChanged="Window_SizeChanged">

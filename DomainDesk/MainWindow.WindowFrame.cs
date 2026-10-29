@@ -1,10 +1,13 @@
 using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Interop;
 
 namespace DomainDesk;
 
 public partial class MainWindow
 {
+    private readonly Size _preferredMinimum;
+
     protected override void OnSourceInitialized(EventArgs e)
     {
         base.OnSourceInitialized(e);
@@ -28,8 +31,17 @@ public partial class MainWindow
         limits.MaxTrackSize.X = Math.Max(limits.MaxTrackSize.X, limits.MaxSize.X);
         limits.MaxTrackSize.Y = Math.Max(limits.MaxTrackSize.Y, limits.MaxSize.Y);
         Marshal.StructureToPtr(limits, lParam, false);
+        FitMinimumToWorkArea(limits.MaxSize.X, limits.MaxSize.Y, GetDpiForWindow(hwnd));
         // Let WPF apply its minimum/maximum tracking sizes after correcting the maximize bounds.
         return 0;
+    }
+
+    private void FitMinimumToWorkArea(int width, int height, uint dpi)
+    {
+        var scale = dpi == 0 ? 1 : dpi / 96d;
+        // A preferred minimum must not force maximized windows past a small or high-DPI work area.
+        MinWidth = Math.Min(_preferredMinimum.Width, width / scale);
+        MinHeight = Math.Min(_preferredMinimum.Height, height / scale);
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -60,6 +72,9 @@ public partial class MainWindow
 
     [DllImport("user32.dll")]
     private static extern nint MonitorFromWindow(nint hwnd, uint flags);
+
+    [DllImport("user32.dll")]
+    private static extern uint GetDpiForWindow(nint hwnd);
 
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
     [return: MarshalAs(UnmanagedType.Bool)]

@@ -39,5 +39,26 @@ internal static partial class Program
         types.ApplyTemplate();
         Assert(types.Template.FindName("PART_Popup", types) is Popup && types.Items.Count == 4,
             "Custom type selector retains the standard dropdown popup and all filters");
+
+        var fit = typeof(DomainDesk.MainWindow).GetMethod("FitMinimumToWorkArea",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        var minimum = new Size(window.MinWidth, window.MinHeight);
+        try
+        {
+            fit.Invoke(window, [1024, 700, 96u]);
+            Assert(window.MinWidth == 1024 && window.MinHeight == 700,
+                "Small monitor work area takes precedence over preferred minimum dimensions");
+            fit.Invoke(window, [1280, 900, 144u]);
+            Assert(Math.Abs(window.MinWidth - 1280 / 1.5) < 0.01 && window.MinHeight == 600,
+                "High-DPI work area is converted from physical pixels before limiting WPF minimums");
+            fit.Invoke(window, [3840, 2160, 96u]);
+            Assert(window.MinWidth == 1120 && window.MinHeight == 740,
+                "Moving back to a large monitor restores preferred minimum dimensions");
+        }
+        finally
+        {
+            window.MinWidth = minimum.Width;
+            window.MinHeight = minimum.Height;
+        }
     }
 }

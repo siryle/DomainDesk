@@ -1,11 +1,11 @@
-# 域控台 / Domain Desk 1.6.1
+# 域控台 / Domain Desk 1.6.2
 
 Windows 原生 WPF 的 AD 目录管理客户端。仅保留目录管理，不再提供导航栏、DNS 服务器、文件共享或日志管理页面。远端操作仍逐次确认并写入本地审计日志。
 
 ## 启动
 
-- 运行根目录 `Start-DomainDesk.cmd`，或 `artifacts/DomainDesk-win-x64-v1.6.1/DomainDesk.exe`。
-- 便携包：`artifacts/DomainDesk-win-x64-v1.6.1.zip`，完整解压后运行。
+- 运行根目录 `Start-DomainDesk.cmd`，或 `artifacts/DomainDesk-win-x64-v1.6.2/DomainDesk.exe`。
+- 便携包：`artifacts/DomainDesk-win-x64-v1.6.2.zip`，完整解压后运行。
 - Windows 10/11 x64，自包含 .NET 8，无需安装 .NET、RSAT 或 PowerShell 模块。
 - 启动为空白、未连接状态；不加载演示数据，不自动连接服务器。点击右上角“连接 AD 域”后才读取实际目录。
 - 已连接时可点击同一按钮重新连接或切换服务器。连接失败时保留原连接及其结果；只有新连接通过初始目录查询才替换原连接。
@@ -16,6 +16,7 @@ Windows 原生 WPF 的 AD 目录管理客户端。仅保留目录管理，不再
 - Sleek 风格：深青色原生交互标题栏、白色工具区、浅灰绿目录树与薄荷绿选中态，三栏分别为目录树、当前目录对象列表、对象详情。
 - 标题栏保留拖动、缩放、双击最大化 / 还原，以及最小化 / 最大化 / 关闭按钮；工具区根据实际会话显示连接状态，未连接时不会显示绿色“已连接”。
 - 窗口显示细边框；最大化按当前显示器的工作区定位，预留任务栏，不将主屏尺寸用于其他显示器。计算使用 Win32 物理像素，保留 WPF 的窗口最小尺寸约束。
+- 小屏或高 DPI 下，最小尺寸自动限制在当前显示器工作区内；移回大屏后恢复首选最小尺寸，避免最小宽高撑大最大化窗口。
 - 搜索框提供提示文字，表格用统一线性图标区分对象类型；状态同时显示文字与颜色。自定义单元格保留排序和剪贴板文本，CSV 导出逻辑不变。
 - 移除重复的“目录管理”标题、演示横幅、目录标题下的 DN，以及详情中的“对象路径 / DN”。
 - “直接所属组”只显示解码后的组名，不显示 `CN=…`、`OU=…`、`DC=…`。不含主组或嵌套组；服务器返回的成员关系仍可能截断。
@@ -74,7 +75,7 @@ Windows 原生 WPF 的 AD 目录管理客户端。仅保留目录管理，不再
 .\scripts\Test-Portable.ps1
 ```
 
-优先使用工作区 `.tools/dotnet/dotnet.exe`，否则使用 PATH 中的 .NET 8 SDK。发布到新的 1.6.1 目录，不修改服务器配置，不终止旧版进程。
+优先使用工作区 `.tools/dotnet/dotnet.exe`，否则使用 PATH 中的 .NET 8 SDK。发布到新的 1.6.2 目录，不修改服务器配置，不终止旧版进程。
 
 自动测试使用本地测试夹具与纯请求检查，不连接真实域控或写入实际目录。演示目录数据仅存在于测试项目，不打包进桌面应用。覆盖未连接启动、只读保护、目录范围、新建 / 编辑 / 删除请求、组名解码，以及滚动条在内容完整 / 溢出 / 恢复完整时的自动显隐。
 
@@ -96,15 +97,15 @@ Windows 原生 WPF 的 AD 目录管理客户端。仅保留目录管理，不再
 
 - `main` 分支推送至 GitHub 后，自动构建、运行本地夹具测试、发布 Windows x64 自包含便携包，并检查 EXE 能否启动和正常退出。
 - 主分支构建的 ZIP 和 SHA256 校验文件保存在 Actions 的 Artifacts 中，保留 14 天；也可在 Actions 页面手动运行 `Windows Portable`。
-- 推送与项目版本完全一致的标签（如 `v1.6.1`）后，自动创建 GitHub Release，上传便携 ZIP 和 `.zip.sha256`。先上传至草稿，全部成功后才公开；重跑不会覆盖已公开 Release。
+- 推送与项目版本完全一致的标签（如 `v1.6.2`）后，自动创建 GitHub Release，上传便携 ZIP 和 `.zip.sha256`。先上传至草稿，全部成功后才公开；重跑不会覆盖已公开 Release。
 - 原仓库自动镜像至 GitHub 时，须同时同步版本标签，并在 GitHub 仓库启用 Actions。工作流使用内置 `GITHUB_TOKEN`，不需要在源码中配置令牌。
 
 发布当前版本：
 
 ```powershell
 git push origin main
-git tag -a v1.6.1 -m "Domain Desk 1.6.1"
-git push origin v1.6.1
+git tag -a v1.6.2 -m "Domain Desk 1.6.2"
+git push origin v1.6.2
 ```
 
 后续发布先修改 `DomainDesk/DomainDesk.csproj` 的 `Version`，并同步界面版本与便携启动检查中的版本文本，再创建对应新标签；标签与项目版本不一致时工作流会停止，避免错误标记发行包。也可在 Actions 手动选择已有版本标签重新运行发布。

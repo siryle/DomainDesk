@@ -1,4 +1,4 @@
-param([string]$Executable = (Join-Path $PSScriptRoot '..\artifacts\DomainDesk-win-x64-v1.6.1\DomainDesk.exe'))
+param([string]$Executable = (Join-Path $PSScriptRoot '..\artifacts\DomainDesk-win-x64-v1.6.2\DomainDesk.exe'))
 $ErrorActionPreference = 'Stop'
 Add-Type @'
 using System;
@@ -60,7 +60,7 @@ try {
         if ($ownerId -eq $owned.Id) {
             $title = New-Object Text.StringBuilder 512
             [void][DomainDeskSmokeWindows]::GetWindowText($window,$title,$title.Capacity)
-            if ($title.ToString().Contains('Domain Desk 1.6.1')) { $script:mainWindow = $window }
+            if ($title.ToString().Contains('Domain Desk 1.6.2')) { $script:mainWindow = $window }
         }
         return $true
     }
