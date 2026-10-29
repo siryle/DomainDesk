@@ -1,0 +1,28 @@
+<Window x:Class="DomainDesk.Dialogs.ConnectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="连接 Active Directory" Style="{StaticResource {x:Type Window}}" Width="510" Height="560" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="30,24">
+            <TextBlock Text="连接你的域" FontSize="25" FontWeight="SemiBold" />
+            <TextBlock Text="使用现有域权限访问，无需在域控制器安装代理。" Foreground="{StaticResource Muted}" Margin="0,9,0,4" />
+            <TextBlock Text="域控制器主机名或 IP 地址" Style="{StaticResource Caption}" />
+            <TextBox x:Name="ServerBox" ToolTip="例如 dc01.corp.example.com 或 192.168.10.10；LDAPS 仍要求证书匹配输入名称" />
+            <CheckBox x:Name="TlsBox" Content="使用 LDAPS / TLS（端口 636，推荐）" IsChecked="True" />
+            <TextBlock Text="关闭 TLS 时使用端口 389 + Windows 协商签名/加密；密码操作需服务器接受足够强度的 SASL 加密。LDAPS 不跳过证书验证。" TextWrapping="Wrap" Foreground="{StaticResource Muted}" FontSize="11" />
+            <CheckBox x:Name="CurrentIdentityBox" Content="使用当前 Windows 身份" IsChecked="True" Checked="Identity_Changed" Unchecked="Identity_Changed" Margin="0,19,0,8" />
+            <StackPanel x:Name="CredentialPanel" IsEnabled="False">
+                <TextBlock Text="账号（DOMAIN\user 或 user@domain）" Style="{StaticResource Caption}" />
+                <TextBox x:Name="UsernameBox" />
+                <TextBlock Text="密码（仅用于本次连接，不保存）" Style="{StaticResource Caption}" />
+                <PasswordBox x:Name="PasswordInput" />
+            </StackPanel>
+            <TextBlock x:Name="ValidationText" Foreground="#BA4A37" TextWrapping="Wrap" Margin="0,20,0,10" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="取消" IsCancel="True" />
+                <Button Content="连接域" Style="{StaticResource PrimaryButton}" IsDefault="True" Click="Connect_Click" Margin="0" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Window>
