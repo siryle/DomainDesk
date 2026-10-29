@@ -1,4 +1,4 @@
-param([switch]$Test, [switch]$Publish, [string]$ReleaseName = 'DomainDesk-win-x64-v1.5.1')
+param([switch]$Test, [switch]$Publish, [string]$ReleaseName = 'DomainDesk-win-x64-v1.5.2')
 $ErrorActionPreference = 'Stop'
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 $local = Join-Path $PSScriptRoot '.tools\dotnet\dotnet.exe'

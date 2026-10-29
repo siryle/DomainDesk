@@ -255,7 +255,7 @@ internal static partial class Program
         directoryField.SetValue(main, new DemoDirectoryService(useTls: false));
         typeof(MainWindow).GetMethod("Refresh_Click", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(main, [main, new RoutedEventArgs()]);
         var objects = (DataGrid)main.FindName("ObjectsGrid");
-        objects.SelectedItem = objects.Items.Cast<DirectoryItem>().First(x => x.Kind == DirectoryKind.Users && !x.Locked);
+        objects.SelectedItem = objects.Items.Cast<DirectoryItem>().Single(x => x.Kind == DirectoryKind.Users && x.Account == "chen.sy");
         Assert(((TextBlock)main.FindName("DetailGroups")).Text == "All-Staff\nTeam-1", "Object details show direct group names rather than full DNs");
         var user = (DirectoryItem)objects.SelectedItem;
         objects.SelectedItem = null;
