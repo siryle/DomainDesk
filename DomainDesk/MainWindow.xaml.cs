@@ -4,6 +4,7 @@ using System.Security;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using DomainDesk.Dialogs;
 using DomainDesk.Services;
 using Microsoft.Win32;
@@ -21,6 +22,22 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+    }
+
+    private void Minimize_Click(object sender, RoutedEventArgs e) => SystemCommands.MinimizeWindow(this);
+    private void Maximize_Click(object sender, RoutedEventArgs e)
+    {
+        if (WindowState == WindowState.Maximized) SystemCommands.RestoreWindow(this);
+        else SystemCommands.MaximizeWindow(this);
+    }
+    private void Close_Click(object sender, RoutedEventArgs e) => SystemCommands.CloseWindow(this);
+
+    private void UpdateConnectionHeader()
+    {
+        var connected = !string.IsNullOrWhiteSpace(_directory.Session.Server);
+        ConnectionLabel.Text = connected ? "已连接 · " + _directory.Session.Server : "尚未连接";
+        ConnectionLabel.ToolTip = connected ? _directory.Session.Server + "\n" + _directory.Session.Identity : "连接 AD 域后读取目录";
+        ConnectionDot.Fill = new SolidColorBrush(connected ? Color.FromRgb(37, 156, 96) : Color.FromRgb(129, 146, 152));
     }
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -63,6 +80,7 @@ public partial class MainWindow : Window
 
     private async Task LoadDirectoryAsync()
     {
+        UpdateConnectionHeader();
         var selected = (ObjectsGrid.SelectedItem as DirectoryItem)?.Id;
         UpdateDirectoryLayout();
         ClearDirectoryResult();
@@ -89,6 +107,7 @@ public partial class MainWindow : Window
 
     private void ApplyDirectory(QueryResult result)
     {
+        UpdateConnectionHeader();
         UpdateDirectoryLayout();
         _items = result.Items;
         ObjectsGrid.ItemsSource = _items;
@@ -122,7 +141,7 @@ public partial class MainWindow : Window
         ComputerActions.Visibility = item?.Kind == DirectoryKind.Computers ? Visibility.Visible : Visibility.Collapsed;
         UserDepartmentPanel.Visibility = item?.Kind == DirectoryKind.Users ? Visibility.Visible : Visibility.Collapsed;
         LogonPanel.Visibility = item is not null && item.Kind != DirectoryKind.Groups ? Visibility.Visible : Visibility.Collapsed;
-        WriteHint.Text = _directory.Session.AllowWrites ? "真实域：操作将提交至远端域控制器。" : "只读连接：当前不能修改域对象。";
+        WriteHint.Text = _directory.Session.AllowWrites ? "操作逐次确认，由域控检查权限。" : "只读连接：当前不能修改域对象。";
         UpdateActions();
     }
 

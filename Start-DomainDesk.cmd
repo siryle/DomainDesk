@@ -1,6 +1,14 @@
 @echo off
 setlocal
 cd /d "%~dp0"
+if exist "artifacts\DomainDesk-win-x64-v1.6.1\DomainDesk.exe" (
+    start "" "artifacts\DomainDesk-win-x64-v1.6.1\DomainDesk.exe"
+    exit /b 0
+)
+if exist "artifacts\DomainDesk-win-x64-v1.6.0\DomainDesk.exe" (
+    start "" "artifacts\DomainDesk-win-x64-v1.6.0\DomainDesk.exe"
+    exit /b 0
+)
 if exist "artifacts\DomainDesk-win-x64-v1.5.2\DomainDesk.exe" (
     start "" "artifacts\DomainDesk-win-x64-v1.5.2\DomainDesk.exe"
     exit /b 0

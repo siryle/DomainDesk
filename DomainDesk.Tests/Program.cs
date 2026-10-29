@@ -250,11 +250,13 @@ internal static partial class Program
         Assert(typeof(MainWindow).Assembly.GetType("DomainDesk.Services.DemoDirectoryService") is null, "Demo directory fixture is not shipped in the application assembly");
         Assert(typeof(MainWindow).Assembly.GetType("DomainDesk.Services.RemoteWindowsService") is null && typeof(MainWindow).Assembly.GetType("DomainDesk.Dialogs.RemoteConnectDialog") is null && typeof(MainWindow).Assembly.GetReferencedAssemblies().All(x => x.Name != "System.Management"), "Removed DNS/SMB services, dialogs and WMI dependency are not shipped");
         Render(main, "directory-disconnected.png");
+        TestSleekUi(main);
         var directoryField = typeof(MainWindow).GetField("_directory", BindingFlags.Instance | BindingFlags.NonPublic)!;
         ((IDirectoryService)directoryField.GetValue(main)!).Dispose();
         directoryField.SetValue(main, new DemoDirectoryService(useTls: false));
         typeof(MainWindow).GetMethod("Refresh_Click", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(main, [main, new RoutedEventArgs()]);
         var objects = (DataGrid)main.FindName("ObjectsGrid");
+        Assert(((TextBlock)main.FindName("ConnectionLabel")).Text == "已连接 · dc01.example.test", "Header connection identity follows the active session rather than placeholder data");
         objects.SelectedItem = objects.Items.Cast<DirectoryItem>().Single(x => x.Kind == DirectoryKind.Users && x.Account == "chen.sy");
         Assert(((TextBlock)main.FindName("DetailGroups")).Text == "All-Staff\nTeam-1", "Object details show direct group names rather than full DNs");
         var user = (DirectoryItem)objects.SelectedItem;
